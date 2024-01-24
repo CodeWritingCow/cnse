@@ -167,7 +167,19 @@ func (t *ToDo) DeleteItem(id int) error {
 	//return nil at the end to indicate that the item was properly deleted
 	//from the database.
 
-	return errors.New("DeleteItem() is currently not implemented")
+	t.loadDB()
+
+	if _, ok := t.toDoMap[id]; ok {
+		delete(t.toDoMap, id)
+		t.saveDB()
+
+		fmt.Println("Item deleted")
+
+	} else {
+		return errors.New("Item does not exist")
+	}
+
+	return nil
 }
 
 // UpdateItem accepts a ToDoItem and updates it in the DB.
