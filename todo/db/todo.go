@@ -226,7 +226,13 @@ func (t *ToDo) GetItem(id int) (ToDoItem, error) {
 	//as the error value the end to indicate that the item was
 	//properly returned from the database.
 
-	return ToDoItem{}, errors.New("GetItem() is currently not implemented")
+	t.loadDB()
+
+	if item, ok := t.toDoMap[id]; ok {
+		return item, nil
+	} else {
+		return ToDoItem{}, errors.New("Item not found")
+	}
 }
 
 // GetAllItems returns all items from the DB.  If successful it
