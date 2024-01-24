@@ -27,7 +27,15 @@ type DbMap map[int]ToDoItem
 //	   	 (they are lowercase).  Describe why you think this is
 //		 a good design decision.
 //
-// ANSWER: <GOES HERE>
+// ANSWER: This is a good design decision because this prevents the
+// the struct fields from being accessed or modified directly
+// by other code packages in the application.
+// This ensures that our application will execute as intended,
+// using unaltered data.
+// If other code packages do need to access or modify the fields,
+// we can create getter or setter functions to allow access
+// to the fields, in a manner controlled and restricted by us.
+
 type ToDo struct {
 	toDoMap    DbMap
 	dbFileName string
