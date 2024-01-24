@@ -110,6 +110,13 @@ func TestAddRandomItem(t *testing.T) {
 
 	t.Log("Testing Adding an Item with Random Fields: ", item)
 
+	// TODO: Complete the test
+	addItemError := DB.AddItem(item)
+	assert.NoError(t, addItemError, "Error adding item to DB")
+
+	testItem, getItemError := DB.GetItem(item.Id)
+	assert.NoError(t, getItemError, "Error getting item from DB")
+	assert.Equal(t, item, testItem, "Item retrieved from DB matches item added to DB")
 }
 
 // TODO: Please delete this test from your submission, it does not do anything
@@ -117,9 +124,9 @@ func TestAddRandomItem(t *testing.T) {
 // and then implment them later.  The go testing framework provides a
 // Skip() function that just tells the testing framework to skip or ignore
 // this test function
-func TestAddPlaceholderTest(t *testing.T) {
-	t.Skip("Placeholder test not implemented yet")
-}
+// func TestAddPlaceholderTest(t *testing.T) {
+// 	t.Skip("Placeholder test not implemented yet")
+// }
 
 //TODO: Create additional tests to showcase the correct operation of your program
 //for example getting an item, getting all items, updating items, and so on. Be
