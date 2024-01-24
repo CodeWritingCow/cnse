@@ -208,7 +208,22 @@ func (t *ToDo) UpdateItem(item ToDoItem) error {
 	//no errors, this function should return nil at the end to indicate
 	//that the item was properly updated in the database.
 
-	return errors.New("UpdateItem() is currently not implemented")
+	// Sample JSON string argument for CLI
+	// "{\"id\":5,\"title\":\"Adopt a cat\",\"done\":false}"
+
+	t.loadDB()
+
+	if existingItem, ok := t.toDoMap[item.Id]; ok {
+		t.toDoMap[existingItem.Id] = item
+		t.saveDB()
+
+		fmt.Println("Item updated")
+
+	} else {
+		return errors.New("Item does not exist")
+	}
+
+	return nil
 }
 
 // GetItem accepts an item id and returns the item from the DB.
