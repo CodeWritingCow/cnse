@@ -73,11 +73,14 @@ func TestAddHardCodedItem(t *testing.T) {
 	//I will get you started, uncomment the lines below to add to the DB
 	//and ensure no errors:
 	//---------------------------------------------------------------
-	//err := DB.AddItem(item)
-	//assert.NoError(t, err, "Error adding item to DB")
+	err := DB.AddItem(item)
+	assert.NoError(t, err, "Error adding item to DB")
 
 	//TODO: Now finish the test case by looking up the item in the DB
 	//and making sure it matches the item that you put in the DB above
+
+	testItem, err := DB.GetItem(999)
+	assert.Equal(t, item, testItem, "Item added to DB matches item retrieved from DB")
 }
 
 func TestAddRandomStructItem(t *testing.T) {
