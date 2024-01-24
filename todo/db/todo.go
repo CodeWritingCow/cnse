@@ -102,7 +102,33 @@ func (t *ToDo) RestoreDB() error {
 	//				defer srcFile.Close()
 
 	// TODO: Implement this function
-	fmt.Println("RestoreDB() is not implemented")
+	sourceFile, sourceError := os.Open(backupFileName)
+	if sourceError != nil {
+		return sourceError
+	}
+	defer sourceFile.Close()
+
+	destinationFile, destinationError := os.Create(dbFileName)
+	if destinationError != nil {
+		return destinationError
+	}
+	defer destinationFile.Close()
+
+	chunkSize := 1000
+	chunk := make([]byte, chunkSize)
+
+	for {
+		chunkNumber, err := sourceFile.Read(chunk)
+
+		if err != nil {
+			break
+		}
+
+		fmt.Printf("read %d bytes: %q\n", chunkNumber, chunk[:chunkNumber])
+
+		destinationFile.Write(chunk[:chunkNumber])
+	}
+
 	fmt.Println("DB File:", dbFileName)
 	fmt.Println("Backup DB File:", backupFileName)
 	return nil
@@ -218,6 +244,9 @@ func (t *ToDo) UpdateItem(item ToDoItem) error {
 	//any errors, return them, as appropriate.  If everything there are
 	//no errors, this function should return nil at the end to indicate
 	//that the item was properly updated in the database.
+
+	// Sample command for adding a new item:
+	// go run main.go -a "{\"id\":5,\"title\":\"Adopt a cat\",\"done\":false}"
 
 	// Sample JSON string argument for CLI
 	// "{\"id\":5,\"title\":\"Adopt a cat\",\"done\":false}"
