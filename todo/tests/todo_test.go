@@ -93,6 +93,11 @@ func TestAddRandomStructItem(t *testing.T) {
 	assert.NoError(t, err, "Created fake item OK")
 
 	//TODO: Complete the test
+	addItemError := DB.AddItem(item)
+	assert.NoError(t, addItemError, "Error adding item to DB")
+
+	testItem, err := DB.GetItem(item.Id)
+	assert.Equal(t, item, testItem, "Random item added to DB matches item retrieved from DB")
 }
 
 func TestAddRandomItem(t *testing.T) {
