@@ -251,7 +251,14 @@ func (t *ToDo) GetAllItems() ([]ToDoItem, error) {
 	//Finally, if there were no errors along the way, return the slice
 	//and nil as the error value.
 
-	return nil, errors.New("GetAllItems() is currently not implemented")
+	t.loadDB()
+	var toDoList []ToDoItem
+
+	for _, item := range t.toDoMap {
+		toDoList = append(toDoList, item)
+	}
+
+	return toDoList, nil
 }
 
 // PrintItem accepts a ToDoItem and prints it to the console
