@@ -131,3 +131,16 @@ func TestAddRandomItem(t *testing.T) {
 //TODO: Create additional tests to showcase the correct operation of your program
 //for example getting an item, getting all items, updating items, and so on. Be
 //creative here.
+
+// DeleteItem
+func TestDeleteItem(t *testing.T) {
+	deleteItemError := DB.DeleteItem(999)
+	assert.NoError(t, deleteItemError, "Error deleting item from DB")
+
+	_, getItemError := DB.GetItem(999)
+	assert.Error(t, getItemError, "Error getting item from DB")
+}
+
+// UpdateItem
+
+// GetAllItems
