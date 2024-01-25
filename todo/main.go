@@ -57,7 +57,16 @@ const (
 //						   use it.  See github.com/spf13/cobra for information
 //						   on how to use it.
 //
-//	 YOUR ANSWER: <GOES HERE>
+//	 YOUR ANSWER: processCmdLineFlags defines the command line flags for the CLI
+//   by using methods from Go's flag package (ex. StringVar, BoolVar, IntVar).
+//   These methods also sets the default values for the flags, along with brief
+//   descriptions of what each flag does.
+//   processCmdLineFlags then parses the flag or flags provided as command line
+//   arguments. The function returns an AppOptType representing the
+//   type of flag that was set.
+//   If no flags are set, or if the user provides an invalid or unimplemented flag,
+//   then processCmdLineFlags returns an error.
+
 func processCmdLineFlags() (AppOptType, error) {
 	flag.StringVar(&dbFileNameFlag, "db", "./data/todo.json", "Name of the database file")
 	flag.BoolVar(&restoreDbFlag, "restore", false, "Restore the database from the backup file")
