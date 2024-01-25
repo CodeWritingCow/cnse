@@ -132,7 +132,7 @@ func TestAddRandomItem(t *testing.T) {
 //for example getting an item, getting all items, updating items, and so on. Be
 //creative here.
 
-// UpdateItem
+// Additional tests for UpdateItem, DeleteItem, and GetAllItems
 func TestUpdateItem(t *testing.T) {
 	item := db.ToDoItem{
 		Id:     888,
@@ -157,7 +157,6 @@ func TestUpdateItem(t *testing.T) {
 	assert.Equal(t, update, updatedItem, "Item retrieved from DB matches updated item")
 }
 
-// DeleteItem
 func TestDeleteItem(t *testing.T) {
 	deleteItemError := DB.DeleteItem(999)
 	assert.NoError(t, deleteItemError, "Error deleting item from DB")
@@ -166,7 +165,6 @@ func TestDeleteItem(t *testing.T) {
 	assert.Error(t, getItemError, "Error getting item from DB")
 }
 
-// GetAllItems
 func TestGetAllItems(t *testing.T) {
 	todoList, err := DB.GetAllItems()
 	assert.NoError(t, err, "Error getting all items from DB")
