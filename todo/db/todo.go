@@ -256,9 +256,6 @@ func (t *ToDo) UpdateItem(item ToDoItem) error {
 	// Sample command for adding a new item:
 	// go run main.go -a "{\"id\":5,\"title\":\"Adopt a cat\",\"done\":false}"
 
-	// Sample JSON string argument for CLI
-	// "{\"id\":5,\"title\":\"Adopt a cat\",\"done\":false}"
-
 	t.loadDB()
 
 	if existingItem, ok := t.toDoMap[item.Id]; ok {
