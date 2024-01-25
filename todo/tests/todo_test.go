@@ -132,6 +132,31 @@ func TestAddRandomItem(t *testing.T) {
 //for example getting an item, getting all items, updating items, and so on. Be
 //creative here.
 
+// UpdateItem
+func TestUpdateItem(t *testing.T) {
+	item := db.ToDoItem{
+		Id:     888,
+		Title:  "Adopt a cat",
+		IsDone: false,
+	}
+
+	update := db.ToDoItem{
+		Id:     888,
+		Title:  "Adopt a cat",
+		IsDone: true,
+	}
+
+	addItemError := DB.AddItem(item)
+	assert.NoError(t, addItemError, "Error adding item to DB")
+
+	updateItemError := DB.UpdateItem(update)
+	assert.NoError(t, updateItemError, "Error updating item")
+
+	updatedItem, getItemError := DB.GetItem(item.Id)
+	assert.NoError(t, getItemError, "Error getting item from DB")
+	assert.Equal(t, update, updatedItem, "Item retrieved from DB matches updated item")
+}
+
 // DeleteItem
 func TestDeleteItem(t *testing.T) {
 	deleteItemError := DB.DeleteItem(999)
@@ -140,7 +165,5 @@ func TestDeleteItem(t *testing.T) {
 	_, getItemError := DB.GetItem(999)
 	assert.Error(t, getItemError, "Error getting item from DB")
 }
-
-// UpdateItem
 
 // GetAllItems
