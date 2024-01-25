@@ -167,3 +167,8 @@ func TestDeleteItem(t *testing.T) {
 }
 
 // GetAllItems
+func TestGetAllItems(t *testing.T) {
+	todoList, err := DB.GetAllItems()
+	assert.NoError(t, err, "Error getting all items from DB")
+	assert.Equal(t, 7, len(todoList), "Number of items retrieved from DB matches number of items in DB")
+}
