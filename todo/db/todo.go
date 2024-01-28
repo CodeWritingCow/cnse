@@ -399,7 +399,19 @@ func (t *ToDo) ChangeItemDoneStatus(id int, value bool) error {
 	//errors along the way, return them.  If everything is successful
 	//return nil at the end to indicate that the item was properly
 
-	return errors.New("ChangeItemDoneStatus() is currently not implemented")
+	// Sample command for changing the status of an existing item:
+	// go run main.go -s=true -q=1
+
+	item, err := t.GetItem(id)
+
+	if err != nil {
+		return err
+	}
+
+	item.IsDone = value
+	updateError := t.UpdateItem(item)
+
+	return updateError
 }
 
 //------------------------------------------------------------

@@ -222,7 +222,12 @@ func main() {
 		//For the CHANGE_ITEM_STATUS extra credit you will also
 		//need to add some code here
 		fmt.Println("Running CHANGE_ITEM_STATUS...")
-		fmt.Println("Not implemented yet, but it can be for extra credit")
+		err := todo.ChangeItemDoneStatus(queryFlag, itemStatusFlag)
+		if err != nil {
+			fmt.Println("Error: ", err)
+			fmt.Println("Did you set the -q flag?")
+			break
+		}
 		fmt.Println("Ok")
 	default:
 		fmt.Println("INVALID_APP_OPT")
