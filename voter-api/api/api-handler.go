@@ -29,12 +29,44 @@ func New() (*ToDoAPI, error) {
 }
 
 func (td *ToDoAPI) GetVoterList(c *gin.Context) {
-
 	if td.voterList.Voters == nil {
 		td.voterList.Voters = make(map[uint]voter.Voter)
 	}
 
+	// TODO: Delete code for adding sample voter
+	// td.voterList.Voters[0] = voter.Voter{
+	// 	VoterId: 0,
+	// 	Name:    "Moo Moo",
+	// 	VoteHistory: []voter.VoterHistory{
+	// 		{
+	// 			PollId:   1,
+	// 			VoteId:   2,
+	// 			VoteDate: time.Now(),
+	// 		},
+	// 	},
+	// }
+
 	c.JSON(http.StatusOK, td.voterList)
+}
+
+func (td *ToDoAPI) GetVoter(c *gin.Context) {
+	idS := c.Param("id")
+	id64, err := strconv.ParseInt(idS, 10, 32)
+
+	if err != nil {
+		log.Println("Error converting id to int64: ", err)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	voter, ok := td.voterList.Voters[uint(id64)]
+	if !ok {
+		log.Println("Item not found")
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	c.JSON(http.StatusOK, voter)
 }
 
 // TODO: Delete AddSampleVoter
@@ -45,7 +77,7 @@ func (td *ToDoAPI) GetVoterList(c *gin.Context) {
 // 	}
 
 // 	td.voterList.Voters[0] = voter.Voter{
-// 		VoterId: 1,
+// 		VoterId: 0,
 // 		Name:    "Moo Moo",
 // 		VoteHistory: []voter.VoterHistory{
 // 			{
