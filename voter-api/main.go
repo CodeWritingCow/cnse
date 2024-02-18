@@ -49,6 +49,15 @@ func main() {
 		os.Exit(1)
 	}
 
+	// TODO: Add route handlers for voter API
+	// r.GET("/voters", apiHandler.ListAllVoters)
+	// r.GET("/voters/:id", apiHandler.GetVoter)
+	// r.POST("/voters/:id", apiHandler.AddVoter)
+	// r.GET("/voters/:id/polls", apiHandler.ListVoterPolls)
+	// r.GET("/voters/:id/polls/:pollid", apiHandler.GetVoterPoll)
+	// r.POST("/voters/:id/polls/:pollid", apiHandler.AddVoterPoll)
+	// r.GET("/voters/health", apiHandler.HealthCheck)
+
 	r.GET("/todo", apiHandler.ListAllTodos)
 	r.POST("/todo", apiHandler.AddToDo)
 	r.PUT("/todo", apiHandler.UpdateToDo)
