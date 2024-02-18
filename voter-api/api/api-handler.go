@@ -5,14 +5,18 @@ import (
 	"net/http"
 	"strconv"
 	"voter-api/db"
+	"voter-api/voter"
 
 	"github.com/gin-gonic/gin"
 )
 
 // The api package creates and maintains a reference to the data handler
 // this is a good design practice
+
+// TODO: Refactor TodoAPI to replace ToDo API code with Voter API code
 type ToDoAPI struct {
-	db *db.ToDo
+	db        *db.ToDo
+	voterList voter.VoterList
 }
 
 func New() (*ToDoAPI, error) {
@@ -23,6 +27,36 @@ func New() (*ToDoAPI, error) {
 
 	return &ToDoAPI{db: dbHandler}, nil
 }
+
+func (td *ToDoAPI) GetVoterList(c *gin.Context) {
+
+	if td.voterList.Voters == nil {
+		td.voterList.Voters = make(map[uint]voter.Voter)
+	}
+
+	c.JSON(http.StatusOK, td.voterList)
+}
+
+// TODO: Delete AddSampleVoter
+// func (td *ToDoAPI) AddSampleVoter(c *gin.Context) {
+
+// 	if td.voterList.Voters == nil {
+// 		td.voterList.Voters = make(map[uint]voter.Voter)
+// 	}
+
+// 	td.voterList.Voters[0] = voter.Voter{
+// 		VoterId: 1,
+// 		Name:    "Moo Moo",
+// 		VoteHistory: []voter.VoterHistory{
+// 			{
+// 				PollId:   1,
+// 				VoteId:   2,
+// 				VoteDate: time.Now(),
+// 			},
+// 		},
+// 	}
+// 	c.JSON(http.StatusOK, td.voterList)
+// }
 
 //Below we implement the API functions.  Some of the framework
 //things you will see include:
