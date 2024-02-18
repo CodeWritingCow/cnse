@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 	"voter-api/db"
 	"voter-api/voter"
 
@@ -34,17 +35,16 @@ func (td *ToDoAPI) GetVoterList(c *gin.Context) {
 	}
 
 	// TODO: Delete code for adding sample voter
-	// td.voterList.Voters[0] = voter.Voter{
-	// 	VoterId: 0,
-	// 	Name:    "Moo Moo",
-	// 	VoteHistory: []voter.VoterHistory{
-	// 		{
-	// 			PollId:   1,
-	// 			VoteId:   2,
-	// 			VoteDate: time.Now(),
-	// 		},
-	// 	},
-	// }
+	td.voterList.Voters[0] = voter.Voter{
+		VoterId: 0,
+		Name:    "Moo Moo",
+		VoteHistory: []voter.VoterHistory{
+			{
+				PollId:   1,
+				VoteDate: time.Now(),
+			},
+		},
+	}
 
 	c.JSON(http.StatusOK, td.voterList)
 }
@@ -69,6 +69,26 @@ func (td *ToDoAPI) GetVoter(c *gin.Context) {
 	c.JSON(http.StatusOK, voter)
 }
 
+func (td *ToDoAPI) ListVoterPolls(c *gin.Context) {
+	idS := c.Param("id")
+	id64, err := strconv.ParseInt(idS, 10, 32)
+
+	if err != nil {
+		log.Println("Error converting id to int64: ", err)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	voter, ok := td.voterList.Voters[uint(id64)]
+	if !ok {
+		log.Println("Item not found")
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	c.JSON(http.StatusOK, voter.VoteHistory)
+}
+
 // TODO: Delete AddSampleVoter
 // func (td *ToDoAPI) AddSampleVoter(c *gin.Context) {
 
@@ -82,7 +102,6 @@ func (td *ToDoAPI) GetVoter(c *gin.Context) {
 // 		VoteHistory: []voter.VoterHistory{
 // 			{
 // 				PollId:   1,
-// 				VoteId:   2,
 // 				VoteDate: time.Now(),
 // 			},
 // 		},

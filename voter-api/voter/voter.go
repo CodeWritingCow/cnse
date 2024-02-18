@@ -9,7 +9,6 @@ import (
 
 type VoterHistory struct {
 	PollId   uint
-	VoteId   uint
 	VoteDate time.Time
 }
 
