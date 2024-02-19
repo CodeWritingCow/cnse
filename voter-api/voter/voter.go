@@ -8,17 +8,17 @@ import (
 )
 
 type VoterHistory struct {
-	PollId   uint
-	VoteDate time.Time
+	PollId   uint      `json:"poll_id"`
+	VoteDate time.Time `json:"vote_date"`
 }
 
 type Voter struct {
-	VoterId     uint
-	Name        string
-	VoteHistory []VoterHistory
+	VoterId     uint           `json:"voter_id"`
+	Name        string         `json:"name"`
+	VoteHistory []VoterHistory `json:"voter_history"`
 }
 type VoterList struct {
-	Voters map[uint]Voter //A map of VoterIDs as keys and Voter structs as values
+	Voters map[uint]Voter `json:"voters"` //A map of VoterIDs as keys and Voter structs as values
 }
 
 // constructor for VoterList struct
