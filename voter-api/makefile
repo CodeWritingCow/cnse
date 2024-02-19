@@ -18,6 +18,7 @@ help:
 	@echo "	   get-v2-all			Get all todos using version 2"
 	@echo "	   build-amd64-linux	Build amd64/Linux executable"
 	@echo "	   build-arm64-linux	Build arm64/Linux executable"
+	@echo "	   add-voter			Add a voter by id and name, pass id=<id> and name=\"<name>\" on command line"
 
 
 
@@ -86,3 +87,7 @@ get-v2:
 .PHONY: get-v2-all
 get-v2-all:
 	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X GET http://localhost:1080/v2/todo
+
+.PHONY: add-voter
+add-voter:
+	curl -d '{ "voter_id": $(id), "name": "$(name)" }' -H "Content-Type: application/json" -X POST http://localhost:1080/voters/$(id)

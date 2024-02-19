@@ -60,6 +60,28 @@ func (td *ToDoAPI) GetVoter(c *gin.Context) {
 	c.JSON(http.StatusOK, voter)
 }
 
+func (td *ToDoAPI) AddVoter(c *gin.Context) {
+	var newVoter voter.Voter
+	newVoter.VoteHistory = []voter.VoterHistory{}
+
+	if err := c.ShouldBindJSON(&newVoter); err != nil {
+		log.Println("Error binding JSON: ", err)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	_, doesVoterExist := td.voterList.Voters[newVoter.VoterId]
+	if doesVoterExist {
+		log.Println("Voter already exists")
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	td.voterList.Voters[newVoter.VoterId] = newVoter
+
+	c.JSON(http.StatusOK, newVoter)
+}
+
 func (td *ToDoAPI) ListVoterPolls(c *gin.Context) {
 	idS := c.Param("id")
 	id64, err := strconv.ParseInt(idS, 10, 32)
