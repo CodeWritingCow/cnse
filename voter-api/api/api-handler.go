@@ -32,18 +32,9 @@ func New() (*ToDoAPI, error) {
 func (td *ToDoAPI) GetVoterList(c *gin.Context) {
 	if td.voterList.Voters == nil {
 		td.voterList.Voters = make(map[uint]voter.Voter)
-	}
 
-	// TODO: Delete code for adding sample voter
-	td.voterList.Voters[0] = voter.Voter{
-		VoterId: 0,
-		Name:    "Moo Moo",
-		VoteHistory: []voter.VoterHistory{
-			{
-				PollId:   1,
-				VoteDate: time.Now(),
-			},
-		},
+		// TODO: Delete code for adding sample voter
+		td.AddSampleVoters(c)
 	}
 
 	c.JSON(http.StatusOK, td.voterList)
@@ -89,25 +80,67 @@ func (td *ToDoAPI) ListVoterPolls(c *gin.Context) {
 	c.JSON(http.StatusOK, voter.VoteHistory)
 }
 
+func (td *ToDoAPI) GetVoterPoll(c *gin.Context) {
+	idS := c.Param("id")
+	id64, err := strconv.ParseInt(idS, 10, 32)
+
+	if err != nil {
+		log.Println("Error converting id to int64: ", err)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	voter, ok := td.voterList.Voters[uint(id64)]
+	if !ok {
+		log.Println("Item not found")
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	pollId := c.Param("pollid")
+	pollId64, pollErr := strconv.ParseInt(pollId, 10, 32)
+
+	if pollErr != nil {
+		log.Println("Error converting pollId to int64: ", pollErr)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	for _, poll := range voter.VoteHistory {
+		if int64(poll.PollId) == pollId64 {
+			c.JSON(http.StatusOK, poll)
+			return
+		}
+	}
+
+	log.Println("Item not found")
+	c.AbortWithStatus(http.StatusNotFound)
+}
+
 // TODO: Delete AddSampleVoter
-// func (td *ToDoAPI) AddSampleVoter(c *gin.Context) {
+func (td *ToDoAPI) AddSampleVoters(c *gin.Context) {
+	td.voterList.Voters[0] = voter.Voter{
+		VoterId: 0,
+		Name:    "Moo Moo",
+		VoteHistory: []voter.VoterHistory{
+			{
+				PollId:   0,
+				VoteDate: time.Now(),
+			},
+		},
+	}
 
-// 	if td.voterList.Voters == nil {
-// 		td.voterList.Voters = make(map[uint]voter.Voter)
-// 	}
-
-// 	td.voterList.Voters[0] = voter.Voter{
-// 		VoterId: 0,
-// 		Name:    "Moo Moo",
-// 		VoteHistory: []voter.VoterHistory{
-// 			{
-// 				PollId:   1,
-// 				VoteDate: time.Now(),
-// 			},
-// 		},
-// 	}
-// 	c.JSON(http.StatusOK, td.voterList)
-// }
+	td.voterList.Voters[1] = voter.Voter{
+		VoterId: 1,
+		Name:    "Totoro",
+		VoteHistory: []voter.VoterHistory{
+			{
+				PollId:   0,
+				VoteDate: time.Now(),
+			},
+		},
+	}
+}
 
 //Below we implement the API functions.  Some of the framework
 //things you will see include:
