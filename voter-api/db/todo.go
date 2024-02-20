@@ -6,7 +6,6 @@ import (
 	"fmt"
 )
 
-// ToDoItem is the struct that represents a single ToDo item
 type ToDoItem struct {
 	Id     int    `json:"id"`
 	Title  string `json:"title"`
@@ -44,39 +43,6 @@ func New() (*ToDo, error) {
 	// We should be all set here, the ToDo struct is ready to go
 	// so we can support the public database operations
 	return toDo, nil
-}
-
-//------------------------------------------------------------
-// THESE ARE THE PUBLIC FUNCTIONS THAT SUPPORT OUR TODO APP
-//------------------------------------------------------------
-
-// AddItem accepts a ToDoItem and adds it to the DB.
-// Preconditions:   (1) The database file must exist and be a valid
-//
-//					(2) The item must not already exist in the DB
-//	    				because we use the item.Id as the key, this
-//						function must check if the item already
-//	    				exists in the DB, if so, return an error
-//
-// Postconditions:
-//
-//	 (1) The item will be added to the DB
-//		(2) The DB file will be saved with the item added
-//		(3) If there is an error, it will be returned
-func (t *ToDo) AddItem(item ToDoItem) error {
-
-	//Before we add an item to the DB, lets make sure
-	//it does not exist, if it does, return an error
-	_, ok := t.toDoMap[item.Id]
-	if ok {
-		return errors.New("item already exists")
-	}
-
-	//Now that we know the item doesn't exist, lets add it to our map
-	t.toDoMap[item.Id] = item
-
-	//If everything is ok, return nil for the error
-	return nil
 }
 
 // DeleteItem accepts an item id and removes it from the DB.
@@ -143,83 +109,6 @@ func (t *ToDo) UpdateItem(item ToDoItem) error {
 	t.toDoMap[item.Id] = item
 
 	return nil
-}
-
-// GetItem accepts an item id and returns the item from the DB.
-// Preconditions:   (1) The database file must exist and be a valid
-//
-//					(2) The item must exist in the DB
-//	    				because we use the item.Id as the key, this
-//						function must check if the item already
-//	    				exists in the DB, if not, return an error
-//
-// Postconditions:
-//
-//	 (1) The item will be returned, if it exists
-//		(2) If there is an error, it will be returned
-//			along with an empty ToDoItem
-//		(3) The database file will not be modified
-func (t *ToDo) GetItem(id int) (ToDoItem, error) {
-
-	// Check if item exists before trying to get it
-	// this is a good practice, return an error if the
-	// item does not exist
-	item, ok := t.toDoMap[id]
-	if !ok {
-		return ToDoItem{}, errors.New("item does not exist")
-	}
-
-	return item, nil
-}
-
-// ChangeItemDoneStatus accepts an item id and a boolean status.
-// It returns an error if the status could not be updated for any
-// reason.  For example, the item itself does not exist, or an
-// IO error trying to save the updated status.
-
-// Preconditions:   (1) The database file must exist and be a valid
-//
-//					(2) The item must exist in the DB
-//	    				because we use the item.Id as the key, this
-//						function must check if the item already
-//	    				exists in the DB, if not, return an error
-//
-// Postconditions:
-//
-//	 (1) The items status in the database will be updated
-//		(2) If there is an error, it will be returned.
-//		(3) This function MUST use existing functionality for most of its
-//			work.  For example, it should call GetItem() to get the item
-//			from the DB, then it should call UpdateItem() to update the
-//			item in the DB (after the status is changed).
-func (t *ToDo) ChangeItemDoneStatus(id int, value bool) error {
-
-	//update was successful
-	return errors.New("not implemented")
-}
-
-// GetAllItems returns all items from the DB.  If successful it
-// returns a slice of all of the items to the caller
-// Preconditions:   (1) The database file must exist and be a valid
-//
-// Postconditions:
-//
-//	 (1) All items will be returned, if any exist
-//		(2) If there is an error, it will be returned
-//			along with an empty slice
-//		(3) The database file will not be modified
-func (t *ToDo) GetAllItems() ([]ToDoItem, error) {
-
-	//Now that we have the DB loaded, lets crate a slice
-	var toDoList []ToDoItem
-
-	//Now lets iterate over our map and add each item to our slice
-	for _, item := range t.toDoMap {
-		toDoList = append(toDoList, item)
-	}
-
-	//Now that we have all of our items in a slice, return it
-	return toDoList, nil
 }
 
 // PrintItem accepts a ToDoItem and prints it to the console
