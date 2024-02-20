@@ -1,9 +1,6 @@
 package voter
 
 import (
-	// "encoding/json"
-	// "errors"
-	// "fmt"
 	"time"
 )
 
@@ -21,7 +18,7 @@ type VoterList struct {
 	Voters map[uint]Voter `json:"voters"` //A map of VoterIDs as keys and Voter structs as values
 }
 
-// constructor for VoterList struct
+// Constructor for VoterList struct
 func NewVoter(id uint, name string) *Voter {
 	return &Voter{
 		Name:        name,
@@ -29,6 +26,7 @@ func NewVoter(id uint, name string) *Voter {
 	}
 }
 
+// Constructor for VoterHistory struct
 func NewVoterHistory(pollId uint, voteDate time.Time) *VoterHistory {
 	return &VoterHistory{
 		PollId:   pollId,
