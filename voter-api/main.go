@@ -43,18 +43,9 @@ func main() {
 	r.GET("/voters/health", apiHandler.HealthCheck)
 
 	// TODO: Remove unused boilerplate code
-	// r.GET("/todo", apiHandler.ListAllTodos)
-	// r.POST("/todo", apiHandler.AddToDo)
 	// r.PUT("/todo", apiHandler.UpdateToDo)
 	// r.DELETE("/todo", apiHandler.DeleteAllToDo)
 	// r.DELETE("/todo/:id", apiHandler.DeleteToDo)
-	// r.GET("/todo/:id", apiHandler.GetToDo)
-
-	// r.GET("/crash", apiHandler.CrashSim)
-	// r.GET("/health", apiHandler.HealthCheck)
-
-	// v2 := r.Group("/v2")
-	// v2.GET("/todo", apiHandler.ListSelectTodos)
 
 	serverPath := fmt.Sprintf("%s:%d", hostFlag, portFlag)
 	r.Run(serverPath)
