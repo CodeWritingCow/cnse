@@ -12,21 +12,21 @@ import (
 )
 
 // TODO: Refactor TodoAPI to replace ToDo API code with Voter API code
-type ToDoAPI struct {
+type VoterAPI struct {
 	db        *db.ToDo
 	voterList voter.VoterList
 }
 
-func New() (*ToDoAPI, error) {
+func New() (*VoterAPI, error) {
 	dbHandler, err := db.New()
 	if err != nil {
 		return nil, err
 	}
 
-	return &ToDoAPI{db: dbHandler}, nil
+	return &VoterAPI{db: dbHandler}, nil
 }
 
-func (td *ToDoAPI) GetVoterList(c *gin.Context) {
+func (td *VoterAPI) GetVoterList(c *gin.Context) {
 	if td.voterList.Voters == nil {
 		td.voterList.Voters = make(map[uint]voter.Voter)
 
@@ -37,7 +37,7 @@ func (td *ToDoAPI) GetVoterList(c *gin.Context) {
 	c.JSON(http.StatusOK, td.voterList)
 }
 
-func (td *ToDoAPI) GetVoter(c *gin.Context) {
+func (td *VoterAPI) GetVoter(c *gin.Context) {
 	idS := c.Param("id")
 	id64, err := strconv.ParseInt(idS, 10, 32)
 
@@ -57,7 +57,7 @@ func (td *ToDoAPI) GetVoter(c *gin.Context) {
 	c.JSON(http.StatusOK, voter)
 }
 
-func (td *ToDoAPI) AddVoter(c *gin.Context) {
+func (td *VoterAPI) AddVoter(c *gin.Context) {
 	var newVoter voter.Voter
 	newVoter.VoteHistory = []voter.VoterHistory{}
 
@@ -79,7 +79,7 @@ func (td *ToDoAPI) AddVoter(c *gin.Context) {
 	c.JSON(http.StatusOK, newVoter)
 }
 
-func (td *ToDoAPI) ListVoterPolls(c *gin.Context) {
+func (td *VoterAPI) ListVoterPolls(c *gin.Context) {
 	idS := c.Param("id")
 	id64, err := strconv.ParseInt(idS, 10, 32)
 
@@ -99,7 +99,7 @@ func (td *ToDoAPI) ListVoterPolls(c *gin.Context) {
 	c.JSON(http.StatusOK, voter.VoteHistory)
 }
 
-func (td *ToDoAPI) GetVoterPoll(c *gin.Context) {
+func (td *VoterAPI) GetVoterPoll(c *gin.Context) {
 	idS := c.Param("id")
 	id64, err := strconv.ParseInt(idS, 10, 32)
 
@@ -136,7 +136,7 @@ func (td *ToDoAPI) GetVoterPoll(c *gin.Context) {
 	c.AbortWithStatus(http.StatusNotFound)
 }
 
-func (td *ToDoAPI) AddVoterPoll(c *gin.Context) {
+func (td *VoterAPI) AddVoterPoll(c *gin.Context) {
 	voterIdS := c.Param("id")
 	voterId64, err := strconv.ParseInt(voterIdS, 10, 32)
 
@@ -185,7 +185,7 @@ func (td *ToDoAPI) AddVoterPoll(c *gin.Context) {
 }
 
 // TODO: Delete AddSampleVoter
-func (td *ToDoAPI) AddSampleVoters(c *gin.Context) {
+func (td *VoterAPI) AddSampleVoters(c *gin.Context) {
 	td.voterList.Voters[0] = voter.Voter{
 		VoterId: 0,
 		Name:    "Moo Moo",
@@ -255,7 +255,7 @@ func (td *ToDoAPI) AddSampleVoters(c *gin.Context) {
 // 	c.Status(http.StatusOK)
 // }
 
-func (td *ToDoAPI) HealthCheck(c *gin.Context) {
+func (td *VoterAPI) HealthCheck(c *gin.Context) {
 	c.JSON(http.StatusOK,
 		gin.H{
 			"status":             "ok",
