@@ -28,3 +28,10 @@ func NewVoter(id uint, name string) *Voter {
 		VoteHistory: []VoterHistory{},
 	}
 }
+
+func NewVoterHistory(pollId uint, voteDate time.Time) *VoterHistory {
+	return &VoterHistory{
+		PollId:   pollId,
+		VoteDate: voteDate,
+	}
+}

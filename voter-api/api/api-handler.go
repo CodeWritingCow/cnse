@@ -139,6 +139,54 @@ func (td *ToDoAPI) GetVoterPoll(c *gin.Context) {
 	c.AbortWithStatus(http.StatusNotFound)
 }
 
+func (td *ToDoAPI) AddVoterPoll(c *gin.Context) {
+	voterIdS := c.Param("id")
+	voterId64, err := strconv.ParseInt(voterIdS, 10, 32)
+
+	if err != nil {
+		log.Println("Error converting voterId to int64: ", err)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	pollId := c.Param("pollid")
+	pollId64, pollErr := strconv.ParseInt(pollId, 10, 32)
+
+	if pollErr != nil {
+		log.Println("Error converting pollId to int64: ", pollErr)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	user, ok := td.voterList.Voters[uint(voterId64)]
+	if !ok {
+		log.Println("Voter not found")
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	for _, poll := range user.VoteHistory {
+		if int64(poll.PollId) == pollId64 {
+			log.Println("Voter poll already exists")
+			c.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+	}
+
+	newVoterPoll := voter.NewVoterHistory(uint(pollId64), time.Now())
+
+	if err := c.ShouldBindJSON(&newVoterPoll); err != nil {
+		log.Println("Error binding JSON: ", err)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	user.VoteHistory = append(user.VoteHistory, *newVoterPoll)
+	td.voterList.Voters[uint(voterId64)] = user
+
+	c.JSON(http.StatusOK, newVoterPoll)
+}
+
 // TODO: Delete AddSampleVoter
 func (td *ToDoAPI) AddSampleVoters(c *gin.Context) {
 	td.voterList.Voters[0] = voter.Voter{
