@@ -42,6 +42,7 @@ func main() {
 	r.POST("/voters/:id/polls/:pollid", apiHandler.AddVoterPoll)
 	r.GET("/voters/health", apiHandler.HealthCheck)
 
+	// TODO: Remove unused boilerplate code
 	// r.GET("/todo", apiHandler.ListAllTodos)
 	// r.POST("/todo", apiHandler.AddToDo)
 	// r.PUT("/todo", apiHandler.UpdateToDo)
