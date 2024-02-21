@@ -25,8 +25,8 @@ func processCmdLineFlags() {
 
 func main() {
 	processCmdLineFlags()
-	r := gin.Default()
-	r.Use(cors.Default())
+	router := gin.Default()
+	router.Use(cors.Default())
 
 	apiHandler, err := api.New()
 	if err != nil {
@@ -35,18 +35,18 @@ func main() {
 	}
 
 	// TODO: Implement PUT routes for extra credit
-	r.GET("/voters", apiHandler.GetVoterList)
-	r.GET("/voters/:id", apiHandler.GetVoter)
-	r.POST("/voters/:id", apiHandler.AddVoter)
-	// r.PUT("/voters/:id", apiHandler.UpdateVoter)
-	r.DELETE("/voters/:id", apiHandler.DeleteVoter)
-	r.GET("/voters/:id/polls", apiHandler.ListVoterPolls)
-	r.GET("/voters/:id/polls/:pollid", apiHandler.GetVoterPoll)
-	r.POST("/voters/:id/polls/:pollid", apiHandler.AddVoterPoll)
-	// r.PUT("/voters/:id/polls/:pollid", apiHandler.UpdateVoterPoll)
-	r.DELETE("/voters/:id/polls/:pollid", apiHandler.DeleteVoterPoll)
-	r.GET("/voters/health", apiHandler.HealthCheck)
+	router.GET("/voters", apiHandler.GetVoterList)
+	router.GET("/voters/:id", apiHandler.GetVoter)
+	router.POST("/voters/:id", apiHandler.AddVoter)
+	// router.PUT("/voters/:id", apiHandler.UpdateVoter)
+	router.DELETE("/voters/:id", apiHandler.DeleteVoter)
+	router.GET("/voters/:id/polls", apiHandler.ListVoterPolls)
+	router.GET("/voters/:id/polls/:pollid", apiHandler.GetVoterPoll)
+	router.POST("/voters/:id/polls/:pollid", apiHandler.AddVoterPoll)
+	// router.PUT("/voters/:id/polls/:pollid", apiHandler.UpdateVoterPoll)
+	router.DELETE("/voters/:id/polls/:pollid", apiHandler.DeleteVoterPoll)
+	router.GET("/voters/health", apiHandler.HealthCheck)
 
 	serverPath := fmt.Sprintf("%s:%d", hostFlag, portFlag)
-	r.Run(serverPath)
+	router.Run(serverPath)
 }
