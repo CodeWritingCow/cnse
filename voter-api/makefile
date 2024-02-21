@@ -9,8 +9,6 @@ help:
 	@echo "	   run					Run the todo program from code"
 	# @echo "	   run-bin				Run the todo executable"
 	@echo "	   update-2				Update record 2, pass a new title in using title=<title> on command line"
-	@echo "	   delete-all			Delete all todos"
-	@echo "	   delete-by-id			Delete a todo by id pass id=<id> on command line"
 	# @echo "	   build-amd64-linux	Build amd64/Linux executable"
 	# @echo "	   build-arm64-linux	Build arm64/Linux executable"
 	@echo "	   get-voters			Get all voters"
@@ -20,6 +18,7 @@ help:
 	@echo "	   get-polls			Get all polls for a voter, pass id=<voter_id> on command line"
 	@echo "	   get-poll-by-id		Get a poll for a voter, pass id=<voter_id> and pollid=<poll_id> on command line"
 	@echo "	   add-poll				Add a poll to a voter, pass id=<voter_id> and pollid=<poll_id> on command line"
+	@echo "	   delete-poll			Delete a poll from a voter, pass id=<voter_id> and pollid=<poll_id> on command line"
 
 
 
@@ -48,10 +47,6 @@ run:
 # update-2:
 # 	curl -d '{ "id": 2, "title": "$(title)", "done": false }' -H "Content-Type: application/json" -X PUT http://localhost:1080/todo 
 
-# .PHONY: delete-all
-# delete-all:
-# 	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X DELETE http://localhost:1080/todo 
-
 .PHONY: get-voters
 get-voters:
 	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X GET http://localhost:1080/voters 
@@ -79,3 +74,7 @@ get-poll-by-id:
 .PHONY: add-poll
 add-poll:
 	curl -d '{ "voter_id": $(id), "poll_id": $(pollid) }' -H "Content-Type: application/json" -X POST http://localhost:1080/voters/$(id)/polls/$(pollid)
+
+.PHONY: delete-poll
+delete-poll:
+	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X DELETE http://localhost:1080/voters/$(id)/polls/$(pollid)

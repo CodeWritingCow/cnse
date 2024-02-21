@@ -206,6 +206,45 @@ func (td *VoterAPI) AddVoterPoll(c *gin.Context) {
 	c.JSON(http.StatusOK, newVoterPoll)
 }
 
+func (td *VoterAPI) DeleteVoterPoll(c *gin.Context) {
+	voterId := c.Param("id")
+	voterId64, err := strconv.ParseInt(voterId, 10, 32)
+
+	if err != nil {
+		log.Println("Error converting voterId to int64: ", err)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	pollId := c.Param("pollid")
+	pollId64, pollErr := strconv.ParseInt(pollId, 10, 32)
+
+	if pollErr != nil {
+		log.Println("Error converting pollId to int64: ", pollErr)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	user, ok := td.voterList.Voters[uint(voterId64)]
+	if !ok {
+		log.Println("Voter not found")
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	for i, poll := range user.VoteHistory {
+		if int64(poll.PollId) == pollId64 {
+			user.VoteHistory = append(user.VoteHistory[:i], user.VoteHistory[i+1:]...)
+			td.voterList.Voters[uint(voterId64)] = user
+			c.JSON(http.StatusOK, gin.H{"message": "Voter poll successfully deleted"})
+			return
+		}
+	}
+
+	log.Println("Voter poll not found")
+	c.AbortWithStatus(http.StatusNotFound)
+}
+
 // TODO: Delete AddSampleVoter
 func (td *VoterAPI) AddSampleVoters(c *gin.Context) {
 	td.voterList.Voters[0] = voter.Voter{

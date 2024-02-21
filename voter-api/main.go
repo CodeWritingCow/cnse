@@ -34,7 +34,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	// TODO: Implement PUT and DELETE routes for extra credit
+	// TODO: Implement PUT routes for extra credit
 	r.GET("/voters", apiHandler.GetVoterList)
 	r.GET("/voters/:id", apiHandler.GetVoter)
 	r.POST("/voters/:id", apiHandler.AddVoter)
@@ -44,7 +44,7 @@ func main() {
 	r.GET("/voters/:id/polls/:pollid", apiHandler.GetVoterPoll)
 	r.POST("/voters/:id/polls/:pollid", apiHandler.AddVoterPoll)
 	// r.PUT("/voters/:id/polls/:pollid", apiHandler.UpdateVoterPoll)
-	// r.DELETE("/voters/:id/polls/:pollid", apiHandler.DeleteVoterPoll)
+	r.DELETE("/voters/:id/polls/:pollid", apiHandler.DeleteVoterPoll)
 	r.GET("/voters/health", apiHandler.HealthCheck)
 
 	serverPath := fmt.Sprintf("%s:%d", hostFlag, portFlag)
