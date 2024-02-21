@@ -34,18 +34,18 @@ func main() {
 		os.Exit(1)
 	}
 
+	// TODO: Implement PUT and DELETE routes for extra credit
 	r.GET("/voters", apiHandler.GetVoterList)
 	r.GET("/voters/:id", apiHandler.GetVoter)
 	r.POST("/voters/:id", apiHandler.AddVoter)
+	// r.PUT("/voters/:id", apiHandler.UpdateVoter)
+	r.DELETE("/voters/:id", apiHandler.DeleteVoter)
 	r.GET("/voters/:id/polls", apiHandler.ListVoterPolls)
 	r.GET("/voters/:id/polls/:pollid", apiHandler.GetVoterPoll)
 	r.POST("/voters/:id/polls/:pollid", apiHandler.AddVoterPoll)
+	// r.PUT("/voters/:id/polls/:pollid", apiHandler.UpdateVoterPoll)
+	// r.DELETE("/voters/:id/polls/:pollid", apiHandler.DeleteVoterPoll)
 	r.GET("/voters/health", apiHandler.HealthCheck)
-
-	// TODO: Remove unused boilerplate code
-	// r.PUT("/todo", apiHandler.UpdateToDo)
-	// r.DELETE("/todo", apiHandler.DeleteAllToDo)
-	// r.DELETE("/todo/:id", apiHandler.DeleteToDo)
 
 	serverPath := fmt.Sprintf("%s:%d", hostFlag, portFlag)
 	r.Run(serverPath)

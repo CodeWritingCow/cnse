@@ -79,6 +79,28 @@ func (td *VoterAPI) AddVoter(c *gin.Context) {
 	c.JSON(http.StatusOK, newVoter)
 }
 
+func (td *VoterAPI) DeleteVoter(c *gin.Context) {
+	id := c.Param("id")
+	id64, err := strconv.ParseInt(id, 10, 32)
+
+	if err != nil {
+		log.Println("Error converting id to int64: ", err)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	_, doesVoterExist := td.voterList.Voters[uint(id64)]
+	if !doesVoterExist {
+		log.Println("Voter not found")
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	delete(td.voterList.Voters, uint(id64))
+
+	c.JSON(http.StatusOK, gin.H{"message": "Voter successfully deleted"})
+}
+
 func (td *VoterAPI) ListVoterPolls(c *gin.Context) {
 	idS := c.Param("id")
 	id64, err := strconv.ParseInt(idS, 10, 32)
@@ -227,20 +249,6 @@ func (td *VoterAPI) AddSampleVoters(c *gin.Context) {
 // 	}
 
 // 	c.JSON(http.StatusOK, todoItem)
-// }
-
-// DELETE /todo/:id
-// func (td *ToDoAPI) DeleteToDo(c *gin.Context) {
-// 	idS := c.Param("id")
-// 	id64, _ := strconv.ParseInt(idS, 10, 32)
-
-// 	if err := td.db.DeleteItem(int(id64)); err != nil {
-// 		log.Println("Error deleting item: ", err)
-// 		c.AbortWithStatus(http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	c.Status(http.StatusOK)
 // }
 
 // Deletes all todos

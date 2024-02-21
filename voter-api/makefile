@@ -16,6 +16,7 @@ help:
 	@echo "	   get-voters			Get all voters"
 	@echo "	   get-voter-by-id		Get a voter by id, pass id=<voter_id> on command line"
 	@echo "	   add-voter			Add a voter by id and name, pass id=<voter_id> and name=\"<name>\" on command line"
+	@echo "	   delete-voter			Delete a voter by id, pass id=<voter_id> on command line"
 	@echo "	   get-polls			Get all polls for a voter, pass id=<voter_id> on command line"
 	@echo "	   get-poll-by-id		Get a poll for a voter, pass id=<voter_id> and pollid=<poll_id> on command line"
 	@echo "	   add-poll				Add a poll to a voter, pass id=<voter_id> and pollid=<poll_id> on command line"
@@ -51,10 +52,6 @@ run:
 # delete-all:
 # 	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X DELETE http://localhost:1080/todo 
 
-# .PHONY: delete-by-id
-# delete-by-id:
-# 	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X DELETE http://localhost:1080/todo/$(id) 
-
 .PHONY: get-voters
 get-voters:
 	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X GET http://localhost:1080/voters 
@@ -66,6 +63,10 @@ get-voter-by-id:
 .PHONY: add-voter
 add-voter:
 	curl -d '{ "voter_id": $(id), "name": "$(name)" }' -H "Content-Type: application/json" -X POST http://localhost:1080/voters/$(id)
+
+.PHONY: delete-voter
+delete-voter:
+	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X DELETE http://localhost:1080/voters/$(id)
 
 .PHONY: get-polls
 get-polls:
