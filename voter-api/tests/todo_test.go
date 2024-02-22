@@ -45,3 +45,17 @@ func Test_GetAllVoters(t *testing.T) {
 	assert.Equal(t, 200, response.StatusCode())
 	assert.Equal(t, 2, len(myResponse.Voters))
 }
+
+func Test_GetVoter(t *testing.T) {
+	response, _ := client.R().Get(BASE_API + "/voters/1")
+	myResponse := voter.Voter{}
+
+	err := json.Unmarshal(response.Body(), &myResponse)
+
+	// fmt.Println(myResponse)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 200, response.StatusCode())
+	assert.Equal(t, uint(1), myResponse.VoterId)
+	assert.Equal(t, "Totoro", myResponse.Name)
+}
