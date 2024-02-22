@@ -29,9 +29,6 @@ func New() (*VoterAPI, error) {
 func (td *VoterAPI) GetVoterList(c *gin.Context) {
 	if td.voterList.Voters == nil {
 		td.voterList.Voters = make(map[uint]voter.Voter)
-
-		// TODO: Delete code for adding sample voter
-		td.AddSampleVoters(c)
 	}
 
 	c.JSON(http.StatusOK, td.voterList)
@@ -99,6 +96,20 @@ func (td *VoterAPI) DeleteVoter(c *gin.Context) {
 	delete(td.voterList.Voters, uint(id64))
 
 	c.JSON(http.StatusOK, gin.H{"message": "Voter successfully deleted"})
+}
+
+func (td *VoterAPI) DeleteAllVoters(c *gin.Context) {
+
+	td.voterList.Voters = make(map[uint]voter.Voter)
+
+	// if err := td.db.DeleteAll(); err != nil {
+	// 	log.Println("Error deleting all voters: ", err)
+	// 	c.AbortWithStatus(http.StatusInternalServerError)
+	// 	return
+	// }
+
+	c.Status(http.StatusOK)
+
 }
 
 func (td *VoterAPI) ListVoterPolls(c *gin.Context) {
@@ -245,7 +256,6 @@ func (td *VoterAPI) DeleteVoterPoll(c *gin.Context) {
 	c.AbortWithStatus(http.StatusNotFound)
 }
 
-// TODO: Delete AddSampleVoter
 func (td *VoterAPI) AddSampleVoters(c *gin.Context) {
 	td.voterList.Voters[0] = voter.Voter{
 		VoterId: 0,
