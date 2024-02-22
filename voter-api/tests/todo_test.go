@@ -60,7 +60,40 @@ func Test_GetVoter(t *testing.T) {
 	assert.Equal(t, "Totoro", myResponse.Name)
 }
 
+func Test_AddVoter(t *testing.T) {
+	response, _ := client.R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(`{
+			"voter_id": 3,
+			"name": "Pikachu"
+		}`).
+		Post(BASE_API + "/voters/3")
+
+	assert.Equal(t, 200, response.StatusCode())
+
+	getResponse, _ := client.R().Get(BASE_API + "/voters")
+	myResponse := voter.VoterList{}
+
+	err := json.Unmarshal(getResponse.Body(), &myResponse)
+
+	// fmt.Println(myResponse)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 200, getResponse.StatusCode())
+	assert.Equal(t, 3, len(myResponse.Voters))
+}
+
 func Test_DeleteVoter(t *testing.T) {
+	DeleteAllVotersResponse, error := client.R().Delete(BASE_API + "/voters")
+	if DeleteAllVotersResponse.StatusCode() != 200 {
+		fmt.Printf("error clearing database, %v", error)
+	}
+
+	AddSampleVotersResponse, error := client.R().Get(BASE_API + "/voters/add-sample-voters")
+	if AddSampleVotersResponse.StatusCode() != 200 {
+		fmt.Printf("error adding sample voters, %v", error)
+	}
+
 	deleteResponse, _ := client.R().Delete(BASE_API + "/voters/1")
 
 	assert.Equal(t, 200, deleteResponse.StatusCode())
