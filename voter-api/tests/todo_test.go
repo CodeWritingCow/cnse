@@ -59,3 +59,20 @@ func Test_GetVoter(t *testing.T) {
 	assert.Equal(t, uint(1), myResponse.VoterId)
 	assert.Equal(t, "Totoro", myResponse.Name)
 }
+
+func Test_DeleteVoter(t *testing.T) {
+	deleteResponse, _ := client.R().Delete(BASE_API + "/voters/1")
+
+	assert.Equal(t, 200, deleteResponse.StatusCode())
+
+	getResponse, _ := client.R().Get(BASE_API + "/voters")
+	myResponse := voter.VoterList{}
+
+	err := json.Unmarshal(getResponse.Body(), &myResponse)
+
+	// fmt.Println(myResponse)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 200, getResponse.StatusCode())
+	assert.Equal(t, 1, len(myResponse.Voters))
+}
