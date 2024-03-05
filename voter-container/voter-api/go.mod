@@ -9,6 +9,8 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-resty/resty/v2 v2.11.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/nitishm/go-rejson/v4 v4.1.0
+	github.com/redis/go-redis/v9 v9.0.2
 )
 
 require (
