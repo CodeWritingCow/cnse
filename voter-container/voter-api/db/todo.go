@@ -199,13 +199,17 @@ func (t *ToDo) DeleteVoter(id int) error {
 	return nil
 }
 
-// DeleteAll removes all items from the DB.
-// It will be exposed via a DELETE /todo endpoint
 func (t *ToDo) DeleteAll() error {
-	//To delete everything, we can just create a new map
-	//and assign it to our existing map.  The garbage collector
-	//will clean up the old map for us
-	t.toDoMap = make(map[int]Voter)
+	pattern := RedisKeyPrefix + "*"
+	keyStrings, _ := t.cacheClient.Keys(t.context, pattern).Result()
+	numDeleted, err := t.cacheClient.Del(t.context, keyStrings...).Result()
+	if err != nil {
+		return err
+	}
+
+	if numDeleted != int64(len(keyStrings)) {
+		return errors.New("one or more items could not be deleted")
+	}
 
 	return nil
 }

@@ -99,17 +99,13 @@ func (td *VoterAPI) DeleteVoter(c *gin.Context) {
 }
 
 func (td *VoterAPI) DeleteAllVoters(c *gin.Context) {
+	if err := td.db.DeleteAll(); err != nil {
+		log.Println("Error deleting all voters: ", err)
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
 
-	td.voterList.Voters = make(map[uint]db.Voter)
-
-	// if err := td.db.DeleteAll(); err != nil {
-	// 	log.Println("Error deleting all voters: ", err)
-	// 	c.AbortWithStatus(http.StatusInternalServerError)
-	// 	return
-	// }
-
-	c.Status(http.StatusOK)
-
+	c.JSON(http.StatusOK, gin.H{"message": "All voters successfully deleted"})
 }
 
 func (td *VoterAPI) ListVoterPolls(c *gin.Context) {
