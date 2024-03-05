@@ -19,6 +19,7 @@ help:
 	@echo "	   get-poll-by-id		Get a poll for a voter, pass id=<voter_id> and pollid=<poll_id> on command line"
 	@echo "	   add-poll				Add a poll to a voter, pass id=<voter_id> and pollid=<poll_id> on command line"
 	@echo "	   delete-poll			Delete a poll from a voter, pass id=<voter_id> and pollid=<poll_id> on command line"
+	@echo "    delete-all			Delete all voters"
 
 
 
@@ -82,3 +83,7 @@ delete-poll:
 .PHONY: add-sample-voters
 add-sample-voters:
 	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X GET http://localhost:1080/voters/add-sample-voters
+
+.PHONY: delete-all
+delete-all:
+	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X DELETE http://localhost:1080/voters
