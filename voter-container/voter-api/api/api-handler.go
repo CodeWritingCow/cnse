@@ -184,14 +184,14 @@ func (td *VoterAPI) AddVoterPoll(c *gin.Context) {
 		return
 	}
 
-	user, ok := td.voterList.Voters[uint(voterId64)]
-	if !ok {
-		log.Println("Voter not found")
+	voter, err := td.db.GetVoter(int(voterId64))
+	if err != nil {
+		log.Println("Voter not found: ", err)
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
-	for _, poll := range user.VoteHistory {
+	for _, poll := range voter.VoteHistory {
 		if int64(poll.PollId) == pollId64 {
 			log.Println("Voter poll already exists")
 			c.AbortWithStatus(http.StatusInternalServerError)
@@ -199,7 +199,9 @@ func (td *VoterAPI) AddVoterPoll(c *gin.Context) {
 		}
 	}
 
-	newVoterPoll := db.NewVoterHistory(uint(pollId64), time.Now())
+	var currentTime = time.Now()
+
+	newVoterPoll := db.NewVoterHistory(uint(pollId64), currentTime)
 
 	if err := c.ShouldBindJSON(&newVoterPoll); err != nil {
 		log.Println("Error binding JSON: ", err)
@@ -207,8 +209,7 @@ func (td *VoterAPI) AddVoterPoll(c *gin.Context) {
 		return
 	}
 
-	user.VoteHistory = append(user.VoteHistory, *newVoterPoll)
-	td.voterList.Voters[uint(voterId64)] = user
+	td.db.AddVoterPollHistory(int(voterId64), int(pollId64), currentTime)
 
 	c.JSON(http.StatusOK, newVoterPoll)
 }

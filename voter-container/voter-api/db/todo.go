@@ -214,6 +214,21 @@ func (t *ToDo) DeleteAll() error {
 	return nil
 }
 
+func (t *ToDo) AddVoterPollHistory(voterId int, pollId int, voteDate time.Time) error {
+	redisKey := redisKeyFromId(voterId)
+	var voter Voter
+	if err := t.getItemFromRedis(redisKey, &voter); err != nil {
+		return err
+	}
+
+	voter.VoteHistory = append(voter.VoteHistory, VoterHistory{PollId: uint(pollId), VoteDate: voteDate})
+	if _, err := t.jsonHelper.JSONSet(redisKey, ".", voter); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // UpdateItem accepts a ToDoItem and updates it in the DB.
 // Preconditions:   (1) The database file must exist and be a valid
 //
