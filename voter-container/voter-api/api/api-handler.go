@@ -6,15 +6,13 @@ import (
 	"strconv"
 	"time"
 	"voter-api/db"
-	"voter-api/voter"
 
 	"github.com/gin-gonic/gin"
 )
 
-// TODO: Refactor TodoAPI to replace ToDo API code with Voter API code
 type VoterAPI struct {
 	db        *db.ToDo
-	voterList voter.VoterList
+	voterList db.VoterList
 }
 
 func New() (*VoterAPI, error) {
@@ -27,11 +25,18 @@ func New() (*VoterAPI, error) {
 }
 
 func (td *VoterAPI) GetVoterList(c *gin.Context) {
-	if td.voterList.Voters == nil {
-		td.voterList.Voters = make(map[uint]voter.Voter)
+	voters, err := td.db.GetAllVoters()
+	if err != nil {
+		log.Println("Error Getting All Items: ", err)
+		c.AbortWithStatus(http.StatusNotFound)
+		return
 	}
 
-	c.JSON(http.StatusOK, td.voterList)
+	if voters == nil {
+		voters = make([]db.Voter, 0)
+	}
+
+	c.JSON(http.StatusOK, voters)
 }
 
 func (td *VoterAPI) GetVoter(c *gin.Context) {
@@ -44,9 +49,10 @@ func (td *VoterAPI) GetVoter(c *gin.Context) {
 		return
 	}
 
-	voter, ok := td.voterList.Voters[uint(id64)]
-	if !ok {
-		log.Println("Item not found")
+	voter, err := td.db.GetVoter(int(id64))
+
+	if err != nil {
+		log.Println("Item not found: ", err)
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -55,8 +61,8 @@ func (td *VoterAPI) GetVoter(c *gin.Context) {
 }
 
 func (td *VoterAPI) AddVoter(c *gin.Context) {
-	var newVoter voter.Voter
-	newVoter.VoteHistory = []voter.VoterHistory{}
+	var newVoter db.Voter
+	newVoter.VoteHistory = []db.VoterHistory{}
 
 	if err := c.ShouldBindJSON(&newVoter); err != nil {
 		log.Println("Error binding JSON: ", err)
@@ -64,14 +70,11 @@ func (td *VoterAPI) AddVoter(c *gin.Context) {
 		return
 	}
 
-	_, doesVoterExist := td.voterList.Voters[newVoter.VoterId]
-	if doesVoterExist {
-		log.Println("Voter already exists")
-		c.AbortWithStatus(http.StatusInternalServerError)
+	if err := td.db.AddVoter(newVoter); err != nil {
+		log.Println("Error adding item: ", err)
+		c.AbortWithStatus(http.StatusConflict)
 		return
 	}
-
-	td.voterList.Voters[newVoter.VoterId] = newVoter
 
 	c.JSON(http.StatusOK, newVoter)
 }
@@ -86,21 +89,18 @@ func (td *VoterAPI) DeleteVoter(c *gin.Context) {
 		return
 	}
 
-	_, doesVoterExist := td.voterList.Voters[uint(id64)]
-	if !doesVoterExist {
-		log.Println("Voter not found")
-		c.AbortWithStatus(http.StatusNotFound)
+	if err := td.db.DeleteVoter(int(id64)); err != nil {
+		log.Println("Error deleting voter: ", err)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
-
-	delete(td.voterList.Voters, uint(id64))
 
 	c.JSON(http.StatusOK, gin.H{"message": "Voter successfully deleted"})
 }
 
 func (td *VoterAPI) DeleteAllVoters(c *gin.Context) {
 
-	td.voterList.Voters = make(map[uint]voter.Voter)
+	td.voterList.Voters = make(map[uint]db.Voter)
 
 	// if err := td.db.DeleteAll(); err != nil {
 	// 	log.Println("Error deleting all voters: ", err)
@@ -203,7 +203,7 @@ func (td *VoterAPI) AddVoterPoll(c *gin.Context) {
 		}
 	}
 
-	newVoterPoll := voter.NewVoterHistory(uint(pollId64), time.Now())
+	newVoterPoll := db.NewVoterHistory(uint(pollId64), time.Now())
 
 	if err := c.ShouldBindJSON(&newVoterPoll); err != nil {
 		log.Println("Error binding JSON: ", err)
@@ -257,10 +257,10 @@ func (td *VoterAPI) DeleteVoterPoll(c *gin.Context) {
 }
 
 func (td *VoterAPI) AddSampleVoters(c *gin.Context) {
-	td.voterList.Voters[0] = voter.Voter{
+	td.voterList.Voters[0] = db.Voter{
 		VoterId: 0,
 		Name:    "Moo Moo",
-		VoteHistory: []voter.VoterHistory{
+		VoteHistory: []db.VoterHistory{
 			{
 				PollId:   0,
 				VoteDate: time.Now(),
@@ -268,10 +268,10 @@ func (td *VoterAPI) AddSampleVoters(c *gin.Context) {
 		},
 	}
 
-	td.voterList.Voters[1] = voter.Voter{
+	td.voterList.Voters[1] = db.Voter{
 		VoterId: 1,
 		Name:    "Totoro",
-		VoteHistory: []voter.VoterHistory{
+		VoteHistory: []db.VoterHistory{
 			{
 				PollId:   0,
 				VoteDate: time.Now(),
