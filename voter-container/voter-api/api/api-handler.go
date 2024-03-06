@@ -24,7 +24,7 @@ func New() (*VoterAPI, error) {
 	return &VoterAPI{db: dbHandler}, nil
 }
 
-func (td *VoterAPI) GetVoterList(c *gin.Context) {
+func (td *VoterAPI) GetAllVoters(c *gin.Context) {
 	voters, err := td.db.GetAllVoters()
 	if err != nil {
 		log.Println("Error Getting All Items: ", err)

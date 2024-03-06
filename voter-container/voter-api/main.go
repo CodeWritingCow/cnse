@@ -35,7 +35,7 @@ func main() {
 	}
 
 	// TODO: Implement PUT routes for extra credit
-	router.GET("/voters", apiHandler.GetVoterList)
+	router.GET("/voters", apiHandler.GetAllVoters)
 	router.GET("/voters/:id", apiHandler.GetVoter)
 	router.POST("/voters/:id", apiHandler.AddVoter)
 	// router.PUT("/voters/:id", apiHandler.UpdateVoter)
