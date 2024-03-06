@@ -6,3 +6,7 @@
 4. Run loadcache.sh to load Redis cache with data
 5. Run `docker compose down` to shut down API
 6. (Optional) Use commands from makefile to interact with API endpoints
+
+## How to test API
+
+Start the API, then run the test file in tests/voter_api_test.go. You don't have to run loadcache.sh.
