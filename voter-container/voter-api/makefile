@@ -12,11 +12,11 @@ help:
 	# @echo "	   build-amd64-linux	Build amd64/Linux executable"
 	# @echo "	   build-arm64-linux	Build arm64/Linux executable"
 	@echo "	   get-voters			Get all voters"
-	@echo "	   get-voter-by-id		Get a voter by id, pass id=<voter_id> on command line"
+	@echo "	   get-voter			Get a voter by id, pass id=<voter_id> on command line"
 	@echo "	   add-voter			Add a voter by id and name, pass id=<voter_id> and name=\"<name>\" on command line"
 	@echo "	   delete-voter			Delete a voter by id, pass id=<voter_id> on command line"
 	@echo "	   get-polls			Get all polls for a voter, pass id=<voter_id> on command line"
-	@echo "	   get-poll-by-id		Get a poll for a voter, pass id=<voter_id> and pollid=<poll_id> on command line"
+	@echo "	   get-poll				Get a poll for a voter, pass id=<voter_id> and pollid=<poll_id> on command line"
 	@echo "	   add-poll				Add a poll to a voter, pass id=<voter_id> and pollid=<poll_id> on command line"
 	@echo "	   delete-poll			Delete a poll from a voter, pass id=<voter_id> and pollid=<poll_id> on command line"
 	@echo "    delete-all			Delete all voters"
@@ -52,8 +52,8 @@ run:
 get-voters:
 	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X GET http://localhost:1080/voters 
 
-.PHONY: get-voter-by-id
-get-voter-by-id:
+.PHONY: get-voter
+get-voter:
 	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X GET http://localhost:1080/voters/$(id) 
 
 .PHONY: add-voter
@@ -68,8 +68,8 @@ delete-voter:
 get-polls:
 	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X GET http://localhost:1080/voters/$(id)/polls
 
-.PHONY: get-poll-by-id
-get-poll-by-id:
+.PHONY: get-poll
+get-poll:
 	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X GET http://localhost:1080/voters/$(id)/polls/$(pollid)
 
 .PHONY: add-poll
