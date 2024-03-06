@@ -244,6 +244,26 @@ func (t *ToDo) AddVoterPollHistory(voterId int, pollId int, voteDate time.Time) 
 	return nil
 }
 
+func (t *ToDo) DeleteVoterPoll(voterId int, pollId int) error {
+	redisKey := redisKeyFromId(voterId)
+	var voter Voter
+	if err := t.getItemFromRedis(redisKey, &voter); err != nil {
+		return err
+	}
+
+	for index, poll := range voter.VoteHistory {
+		if int(poll.PollId) == pollId {
+			voter.VoteHistory = append(voter.VoteHistory[:index], voter.VoteHistory[index+1:]...)
+			if _, err := t.jsonHelper.JSONSet(redisKey, ".", voter); err != nil {
+				return err
+			}
+			return nil
+		}
+	}
+
+	return errors.New("poll not found")
+}
+
 // UpdateItem accepts a ToDoItem and updates it in the DB.
 // Preconditions:   (1) The database file must exist and be a valid
 //

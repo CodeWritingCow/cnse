@@ -233,17 +233,17 @@ func (td *VoterAPI) DeleteVoterPoll(c *gin.Context) {
 		return
 	}
 
-	user, ok := td.voterList.Voters[uint(voterId64)]
-	if !ok {
+	voter, err := td.db.GetVoter(int(voterId64))
+	if err != nil {
 		log.Println("Voter not found")
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
-	for i, poll := range user.VoteHistory {
+	for i, poll := range voter.VoteHistory {
 		if int64(poll.PollId) == pollId64 {
-			user.VoteHistory = append(user.VoteHistory[:i], user.VoteHistory[i+1:]...)
-			td.voterList.Voters[uint(voterId64)] = user
+			voter.VoteHistory = append(voter.VoteHistory[:i], voter.VoteHistory[i+1:]...)
+			td.db.DeleteVoterPoll(int(voterId64), int(pollId64))
 			c.JSON(http.StatusOK, gin.H{"message": "Voter poll successfully deleted"})
 			return
 		}
