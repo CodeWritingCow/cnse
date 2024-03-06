@@ -80,10 +80,6 @@ add-poll:
 delete-poll:
 	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X DELETE http://localhost:1080/voters/$(id)/polls/$(pollid)
 
-.PHONY: add-sample-voters
-add-sample-voters:
-	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X GET http://localhost:1080/voters/add-sample-voters
-
 .PHONY: delete-all
 delete-all:
 	curl -w "HTTP Status: %{http_code}\n" -H "Content-Type: application/json" -X DELETE http://localhost:1080/voters

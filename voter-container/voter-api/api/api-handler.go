@@ -253,30 +253,6 @@ func (td *VoterAPI) DeleteVoterPoll(c *gin.Context) {
 	c.AbortWithStatus(http.StatusNotFound)
 }
 
-func (td *VoterAPI) AddSampleVoters(c *gin.Context) {
-	td.voterList.Voters[0] = db.Voter{
-		VoterId: 0,
-		Name:    "Moo Moo",
-		VoteHistory: []db.VoterHistory{
-			{
-				PollId:   0,
-				VoteDate: time.Now(),
-			},
-		},
-	}
-
-	td.voterList.Voters[1] = db.Voter{
-		VoterId: 1,
-		Name:    "Totoro",
-		VoteHistory: []db.VoterHistory{
-			{
-				PollId:   0,
-				VoteDate: time.Now(),
-			},
-		},
-	}
-}
-
 // TODO: Remove unused boilerplate code
 
 // implementation for PUT /todo
