@@ -41,7 +41,7 @@ func main() {
 	// router.PUT("/voters/:id", apiHandler.UpdateVoter)
 	router.DELETE("/voters/:id", apiHandler.DeleteVoter)
 	router.DELETE("/voters", apiHandler.DeleteAllVoters)
-	router.GET("/voters/:id/polls", apiHandler.ListVoterPolls)
+	router.GET("/voters/:id/polls", apiHandler.GetVoterPolls)
 	router.GET("/voters/:id/polls/:pollid", apiHandler.GetVoterPoll)
 	router.POST("/voters/:id/polls/:pollid", apiHandler.AddVoterPoll)
 	// router.PUT("/voters/:id/polls/:pollid", apiHandler.UpdateVoterPoll)

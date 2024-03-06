@@ -108,7 +108,7 @@ func (td *VoterAPI) DeleteAllVoters(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "All voters successfully deleted"})
 }
 
-func (td *VoterAPI) ListVoterPolls(c *gin.Context) {
+func (td *VoterAPI) GetVoterPolls(c *gin.Context) {
 	idS := c.Param("id")
 	id64, err := strconv.ParseInt(idS, 10, 32)
 
@@ -118,14 +118,14 @@ func (td *VoterAPI) ListVoterPolls(c *gin.Context) {
 		return
 	}
 
-	voter, ok := td.voterList.Voters[uint(id64)]
-	if !ok {
-		log.Println("Item not found")
+	voterHistory, err := td.db.GetVoterPolls(int(id64))
+	if err != nil {
+		log.Println("Item not found: ", err)
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
-	c.JSON(http.StatusOK, voter.VoteHistory)
+	c.JSON(http.StatusOK, voterHistory)
 }
 
 func (td *VoterAPI) GetVoterPoll(c *gin.Context) {

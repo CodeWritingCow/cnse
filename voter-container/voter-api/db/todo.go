@@ -73,17 +73,7 @@ type ToDo struct {
 	cache
 }
 
-// New is a constructor function that returns a pointer to a new
-// ToDo struct.  It takes a single string argument that is the
-// name of the file that will be used to store the ToDo items.
-// If the file doesn't exist, it will be created.  If the file
-// does exist, it will be loaded into the ToDo struct.
 func New() (*ToDo, error) {
-	// toDo := &ToDo{
-	// 	toDoMap: make(map[int]ToDoItem),
-	// }
-
-	// return toDo, nil
 	redisUrl := os.Getenv("REDIS_URL")
 	if redisUrl == "" {
 		redisUrl = RedisDefaultLocation
@@ -92,7 +82,6 @@ func New() (*ToDo, error) {
 }
 
 func NewWithCacheInstance(location string) (*ToDo, error) {
-
 	//Connect to redis.  Other options can be provided, but the
 	//defaults are OK
 	client := redis.NewClient(&redis.Options{
@@ -212,6 +201,16 @@ func (t *ToDo) DeleteAll() error {
 	}
 
 	return nil
+}
+
+func (t *ToDo) GetVoterPolls(voterId int) ([]VoterHistory, error) {
+	redisKey := redisKeyFromId(voterId)
+	var voter Voter
+	if err := t.getItemFromRedis(redisKey, &voter); err != nil {
+		return nil, err
+	}
+
+	return voter.VoteHistory, nil
 }
 
 func (t *ToDo) AddVoterPollHistory(voterId int, pollId int, voteDate time.Time) error {
