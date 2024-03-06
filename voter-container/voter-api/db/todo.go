@@ -25,10 +25,9 @@ type Voter struct {
 }
 
 type VoterList struct {
-	Voters map[uint]Voter `json:"voters"` //A map of VoterIDs as keys and Voter structs as values
+	Voters map[uint]Voter `json:"voters"`
 }
 
-// Constructor for VoterList struct
 func NewVoter(id uint, name string) *Voter {
 	return &Voter{
 		Name:        name,
@@ -36,7 +35,6 @@ func NewVoter(id uint, name string) *Voter {
 	}
 }
 
-// Constructor for VoterHistory struct
 func NewVoterHistory(pollId uint, voteDate time.Time) *VoterHistory {
 	return &VoterHistory{
 		PollId:   pollId,
@@ -56,20 +54,10 @@ type cache struct {
 	context     context.Context
 }
 
-// DbMap is a type alias for a map of ToDoItems.  The key
-// will be the ToDoItem.Id and the value will be the ToDoItem
 type DbMap map[int]Voter
 
-// ToDo is the struct that represents the main object of our
-// todo app.  It contains a map of ToDoItems and the name of
-// the file that is used to store the items.
-//
-// This is just a mock, so we will only be managing an in memory
-// map
 type ToDo struct {
 	toDoMap DbMap
-	//more things would be included in a real implementation
-
 	cache
 }
 
@@ -82,33 +70,20 @@ func New() (*ToDo, error) {
 }
 
 func NewWithCacheInstance(location string) (*ToDo, error) {
-	//Connect to redis.  Other options can be provided, but the
-	//defaults are OK
 	client := redis.NewClient(&redis.Options{
 		Addr: location,
 	})
 
-	//We use this context to coordinate betwen our go code and
-	//the redis operaitons
 	ctx := context.Background()
 
-	//This is the reccomended way to ensure that our redis connection
-	//is working
 	err := client.Ping(ctx).Err()
 	if err != nil {
 		log.Println("Error connecting to redis" + err.Error() + "cache might not be available, continuing...")
 	}
 
-	//By default, redis manages keys and values, where the values
-	//are either strings, sets, maps, etc.  Redis has an extension
-	//module called ReJSON that allows us to store JSON objects
-	//however, we need a companion library in order to work with it
-	//Below we create an instance of the JSON helper and associate
-	//it with our redis connnection
 	jsonHelper := rejson.NewReJSONHandler()
 	jsonHelper.SetGoRedisClientWithContext(ctx, client)
 
-	//Return a pointer to a new ToDo struct
 	return &ToDo{
 		cache: cache{
 			cacheClient: client,
