@@ -35,25 +35,25 @@ func TestMain(m *testing.M) {
 
 func Test_GetAllVoters(t *testing.T) {
 	response, _ := client.R().Get(BASE_API + "/voters")
-	myResponse := []db.Voter{}
+	voters := []db.Voter{}
 
-	err := json.Unmarshal(response.Body(), &myResponse)
+	err := json.Unmarshal(response.Body(), &voters)
 
 	assert.Nil(t, err)
 	assert.Equal(t, 200, response.StatusCode())
-	assert.Equal(t, 2, len(myResponse))
+	assert.Equal(t, 2, len(voters))
 }
 
 func Test_GetVoter(t *testing.T) {
 	response, _ := client.R().Get(BASE_API + "/voters/1")
-	myResponse := db.Voter{}
+	voter := db.Voter{}
 
-	err := json.Unmarshal(response.Body(), &myResponse)
+	err := json.Unmarshal(response.Body(), &voter)
 
 	assert.Nil(t, err)
 	assert.Equal(t, 200, response.StatusCode())
-	assert.Equal(t, uint(1), myResponse.VoterId)
-	assert.Equal(t, "Totoro", myResponse.Name)
+	assert.Equal(t, uint(1), voter.VoterId)
+	assert.Equal(t, "Totoro", voter.Name)
 }
 
 func Test_AddVoter(t *testing.T) {
@@ -68,13 +68,13 @@ func Test_AddVoter(t *testing.T) {
 	assert.Equal(t, 200, response.StatusCode())
 
 	getResponse, _ := client.R().Get(BASE_API + "/voters")
-	myResponse := []db.Voter{}
+	voters := []db.Voter{}
 
-	err := json.Unmarshal(getResponse.Body(), &myResponse)
+	err := json.Unmarshal(getResponse.Body(), &voters)
 
 	assert.Nil(t, err)
 	assert.Equal(t, 200, getResponse.StatusCode())
-	assert.Equal(t, 3, len(myResponse))
+	assert.Equal(t, 3, len(voters))
 }
 
 func Test_DeleteVoter(t *testing.T) {
@@ -93,11 +93,11 @@ func Test_DeleteVoter(t *testing.T) {
 	assert.Equal(t, 200, deleteResponse.StatusCode())
 
 	getResponse, _ := client.R().Get(BASE_API + "/voters")
-	myResponse := []db.Voter{}
+	voters := []db.Voter{}
 
-	err := json.Unmarshal(getResponse.Body(), &myResponse)
+	err := json.Unmarshal(getResponse.Body(), &voters)
 
 	assert.Nil(t, err)
 	assert.Equal(t, 200, getResponse.StatusCode())
-	assert.Equal(t, 1, len(myResponse))
+	assert.Equal(t, 1, len(voters))
 }
