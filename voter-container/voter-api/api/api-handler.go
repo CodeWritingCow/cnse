@@ -273,18 +273,6 @@ func (td *VoterAPI) DeleteVoterPoll(c *gin.Context) {
 // 	c.JSON(http.StatusOK, todoItem)
 // }
 
-// Deletes all todos
-// func (td *ToDoAPI) DeleteAllToDo(c *gin.Context) {
-
-// 	if err := td.db.DeleteAll(); err != nil {
-// 		log.Println("Error deleting all items: ", err)
-// 		c.AbortWithStatus(http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	c.Status(http.StatusOK)
-// }
-
 func (td *VoterAPI) HealthCheck(c *gin.Context) {
 	c.JSON(http.StatusOK,
 		gin.H{
@@ -294,4 +282,30 @@ func (td *VoterAPI) HealthCheck(c *gin.Context) {
 			"users_processed":    1000,
 			"errors_encountered": 10,
 		})
+}
+
+func (td *VoterAPI) AddSampleVoters(c *gin.Context) {
+	var newVoterOne db.Voter
+	var newVoterTwo db.Voter
+
+	newVoterOne.VoterId = 0
+	newVoterOne.Name = "Moo Moo"
+	newVoterOne.VoteHistory = []db.VoterHistory{
+		{
+			PollId:   0,
+			VoteDate: time.Now(),
+		},
+	}
+
+	newVoterTwo.VoterId = 1
+	newVoterTwo.Name = "Totoro"
+	newVoterTwo.VoteHistory = []db.VoterHistory{
+		{
+			PollId:   0,
+			VoteDate: time.Now(),
+		},
+	}
+
+	td.db.AddVoter(newVoterOne)
+	td.db.AddVoter(newVoterTwo)
 }

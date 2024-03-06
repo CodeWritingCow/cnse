@@ -47,6 +47,7 @@ func main() {
 	// router.PUT("/voters/:id/polls/:pollid", apiHandler.UpdateVoterPoll)
 	router.DELETE("/voters/:id/polls/:pollid", apiHandler.DeleteVoterPoll)
 	router.GET("/voters/health", apiHandler.HealthCheck)
+	router.GET("/voters/add-sample-voters", apiHandler.AddSampleVoters)
 
 	serverPath := fmt.Sprintf("%s:%d", hostFlag, portFlag)
 	router.Run(serverPath)

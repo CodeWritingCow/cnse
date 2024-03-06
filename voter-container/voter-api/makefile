@@ -15,11 +15,11 @@ help:
 	@echo "	   get-voter			Get a voter by id, pass id=<voter_id> on command line"
 	@echo "	   add-voter			Add a voter by id and name, pass id=<voter_id> and name=\"<name>\" on command line"
 	@echo "	   delete-voter			Delete a voter by id, pass id=<voter_id> on command line"
+	@echo "    delete-all			Delete all voters"
 	@echo "	   get-polls			Get all polls for a voter, pass id=<voter_id> on command line"
 	@echo "	   get-poll				Get a poll for a voter, pass id=<voter_id> and pollid=<poll_id> on command line"
 	@echo "	   add-poll				Add a poll to a voter, pass id=<voter_id> and pollid=<poll_id> on command line"
 	@echo "	   delete-poll			Delete a poll from a voter, pass id=<voter_id> and pollid=<poll_id> on command line"
-	@echo "    delete-all			Delete all voters"
 
 
 
