@@ -138,8 +138,8 @@ func (td *VoterAPI) GetVoterPoll(c *gin.Context) {
 		return
 	}
 
-	voter, ok := td.voterList.Voters[uint(id64)]
-	if !ok {
+	voter, err := td.db.GetVoter(int(id64))
+	if err != nil {
 		log.Println("Item not found")
 		c.AbortWithStatus(http.StatusNotFound)
 		return

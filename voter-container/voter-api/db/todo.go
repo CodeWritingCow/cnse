@@ -213,6 +213,22 @@ func (t *ToDo) GetVoterPolls(voterId int) ([]VoterHistory, error) {
 	return voter.VoteHistory, nil
 }
 
+func (t *ToDo) GetVoterPoll(voterId int, pollId int) (VoterHistory, error) {
+	redisKey := redisKeyFromId(voterId)
+	var voter Voter
+	if err := t.getItemFromRedis(redisKey, &voter); err != nil {
+		return VoterHistory{}, err
+	}
+
+	for _, poll := range voter.VoteHistory {
+		if int(poll.PollId) == pollId {
+			return poll, nil
+		}
+	}
+
+	return VoterHistory{}, errors.New("poll not found")
+}
+
 func (t *ToDo) AddVoterPollHistory(voterId int, pollId int, voteDate time.Time) error {
 	redisKey := redisKeyFromId(voterId)
 	var voter Voter
